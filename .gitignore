@@ -4,6 +4,9 @@ home/dataRaw/*
 home/atlas_data.tar.gz
 home/__pycache__
 
+home/Annotations/*
+!home/Annotations/.gitkeep
+
 home/dataOut/*
 !home/dataOut/.gitkeep
 home/dataOut/3_QC_Doublets_Stripped/*
@@ -12,6 +15,8 @@ home/dataOut/3_QC_Doublets_Stripped/*
 home/dataOut/4_Batch_Correction/*
 !home/dataOut/4_Batch_Correction
 !home/dataOut/4_Batch_Correction/.gitkeep
+!home/dataOut/5_Clustering
+!home/dataOut/5_Clustering/.gitkeep
 
 home/Plots/1_QC/*
 !home/Plots/1_QC/.gitkeep
@@ -21,6 +26,10 @@ home/Plots/3_QC_Doublets_Stripped/*
 !home/Plots/3_QC_Doublets_Stripped/.gitkeep
 home/Plots/4_Batch_Correction/*
 !home/Plots/4_Batch_Correction/.gitkeep
+home/Plots/5_Clustering/*
+!home/Plots/5_Clustering/.gitkeep
 
 home/Tables/1_QC/*
 !home/Tables/1_QC/*.gitkeep
+home/Tables/5_Clustering/*
+!home/Tables/5_Clustering/*.gitkeep

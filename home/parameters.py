@@ -43,8 +43,6 @@ CLUSTER_THRESHOLD = 0.25
 DISCONNECTION_DISTANCE = 7
 MIN_CLUSTER_SIZE = 15
 
-
-
 #EXCLUDE FROM HVGs GENES
 SKIP_GENES_SEX = ["Xist"]
 SKIP_GENES_S_PHASE = \
@@ -62,3 +60,35 @@ SKIP_GENES_G2M = \
      'Ect2', 'Kif23', 'Hmmr', 'Aurka', 'Psrc1', 'Anln', 'Lbr', 'Ckap5',
      'Cenpe', 'Ctcf', 'Nek2', 'G2e3', 'Gas2l3', 'Cbx5', 'Cenpa']
 SKIP_GENES = SKIP_GENES_SEX + SKIP_GENES_S_PHASE + SKIP_GENES_G2M
+
+#ANNOTATION
+#Louvain resolution
+LOUVAIN_RESOLUTION = 1
+DPC_CUT_PARAMETERS = [20,0.2]
+#Genes used for manual annotation
+geneList = [
+ 'Adh1a2',
+ 'Cdh1','Cdh2','Cdh11','Cer1',
+ 'Dlx5','Dmrt2',
+ 'Ebf1','Egr2','En1','Eomes','Eya1','Eya2','Evx1',
+ 'Fgf5','Foxa2','Foxc1','Foxd1','Foxf1','Foxf2','Foxp2',
+ 'Hand1','Hand2','Hesx1','Hoxa1','Hoxa2','Hoxa3','Hoxa4','Hoxa10',
+ 'Irx3','Isl1',
+ 'Kdr',
+ 'Lefty1','Lfng','Lhx1',
+ 'Meox1','Mesp1','Mesp2','Msc','Msgn','Myf5',
+ 'Nanog','Nkx2-5','Noto',
+ 'Olig2','Osr1','Otx2',
+ 'Pax1','Pax3','Pax6','Pitx2','Prdm1','Pou3f1',
+ 'Ripply2',
+ 'Shh','Six1','Six3','Snai1','Snai2','Sox1','Sox2','Sox3','Sox9','Sox17',
+ 'T','Tfap2a','Tfap2c','Tbx1','Tbx4','Tbx5','Tbx6','Tbx18','Tcf15','Tcf21','Twist1','Twist2',
+ 'Uncx',
+ 'Wnt1'
+]
+
+#COMPARATIVE GENES
+genes_comparative = ["Osr1","Tbx6","Foxf1"]
+stages_comparative = {"E7.5":["3","4","7","10","11"],
+                      "E8.0":["4","5","6"],
+                      "E8.5":["1","2"]}

@@ -11,7 +11,7 @@ import pandas as pd
 import networkx as nx
 from pygam import LinearGAM, s, f
 
-def loadData(name="./dataOut/Raw.h5ad",QC_basic=False,QC_imputed=False,Normalized=False,Log1p=False,QC_Doublets_Stripped=False,Log=False,sample="All",stage="All"):
+def loadData(name="./dataOut/Raw.h5ad",QC_basic=False,QC_imputed=False,Normalized=False,Log1p=False,sample="All",stage="All"):
     
     a = scp.read(name)
 
@@ -69,7 +69,7 @@ def fast_mnn_correct(adata,key,key_obsm="X_pca",key_added="X_pca_MNN",order=None
     c.var.index = c.var.index.astype(str)
     l = [c[c.obs[key]==i] for i in orderMerge]
     if len(l)>1:
-        c = scp.external.pp.mnn_correct(*l)[0]
+        c = scp.external.pp.mnn_correct(*l,**kwargs)[0]
         c.obs.index = [i.split("-")[0] for i in c.obs.index]
         sort = np.sort(c.obs.index.values.astype(int)).astype(str)
         c = c[sort]
@@ -80,13 +80,10 @@ def fast_mnn_correct(adata,key,key_obsm="X_pca",key_added="X_pca_MNN",order=None
 
 def fast_mnn_correct_twice(adata,key1,key2,order,key_obsm="X_pca",key_added="X_MNN",**kwargs):
     
-    print(key1)
-    
     l = []
     for i in order:
-        print(i)
         b = adata[adata.obs[key2]==i].copy()
-        mnn_correct(b,key1,key_obsm="X_pca",key_added="_Aux")
+        fast_mnn_correct(b,key1,key_obsm="X_pca",key_added="_Aux",**kwargs)
         c = scp.AnnData(b.obsm["_Aux"].copy())
         c.obs = b.obs.copy()
         c.var.index = c.var.index.astype(str)
@@ -94,7 +91,7 @@ def fast_mnn_correct_twice(adata,key1,key2,order,key_obsm="X_pca",key_added="X_M
         
     if len(l)>1:
         #blockPrint()#To avoid printing
-        b = scp.external.pp.mnn_correct(*l,verbosity=False)[0]
+        b = scp.external.pp.mnn_correct(*l,**kwargs)[0]
         #enablePrint()#To enable printing
         b.obs.index = [i.split("-")[0] for i in b.obs.index]
         sort = np.sort(b.obs.index.values.astype(int)).astype(str)
@@ -103,6 +100,14 @@ def fast_mnn_correct_twice(adata,key1,key2,order,key_obsm="X_pca",key_added="X_M
     adata.obsm[key_added] = b.X.copy()
     
     del b, c
+    
+    return
+
+def umap_seed_with_paga(a,resolution):
+    
+    scp.tl.louvain(a,resolution=resolution)
+    scp.tl.paga(a); 
+    scp.pl.paga(a,plot=False)
     
     return
 
