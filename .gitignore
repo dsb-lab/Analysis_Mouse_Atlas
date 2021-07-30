@@ -6,6 +6,7 @@ home/__pycache__
 
 home/Annotations/*
 !home/Annotations/.gitkeep
+!home/Annotations/Annotations.*
 
 home/dataOut/*
 !home/dataOut/.gitkeep
@@ -33,3 +34,5 @@ home/Tables/1_QC/*
 !home/Tables/1_QC/*.gitkeep
 home/Tables/5_Clustering/*
 !home/Tables/5_Clustering/*.gitkeep
+
+*.zip

@@ -10,6 +10,7 @@ import seaborn as sb
 import pandas as pd
 import networkx as nx
 from pygam import LinearGAM, s, f
+import random
 
 def loadData(name="./dataOut/Raw.h5ad",QC_basic=False,QC_imputed=False,Normalized=False,Log1p=False,sample="All",stage="All"):
     
@@ -103,8 +104,9 @@ def fast_mnn_correct_twice(adata,key1,key2,order,key_obsm="X_pca",key_added="X_M
     
     return
 
-def umap_seed_with_paga(a,resolution):
+def umap_seed_with_paga(a,resolution,seed=0):
     
+    random.seed(seed)
     scp.tl.louvain(a,resolution=resolution)
     scp.tl.paga(a); 
     scp.pl.paga(a,plot=False)
