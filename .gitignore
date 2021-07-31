@@ -29,6 +29,8 @@ home/Plots/4_Batch_Correction/*
 !home/Plots/4_Batch_Correction/.gitkeep
 home/Plots/5_Clustering/*
 !home/Plots/5_Clustering/.gitkeep
+home/Plots/6_Time_Integration/*
+!home/Plots/6_Time_Integration/.gitkeep
 
 home/Tables/1_QC/*
 !home/Tables/1_QC/*.gitkeep
