@@ -59,7 +59,7 @@
       "curve-style": "haystack",
       "haystack-radius": "0.5",
       "opacity": "0.8",
-      "line-color": "#bbb",
+      "line-color": "lightgrey",
       "width": "mapData(weight, 0, 1, 0, 8)",
       "overlay-padding": "3px"
     }
