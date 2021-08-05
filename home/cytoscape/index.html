@@ -30,7 +30,11 @@
 
   <div class="tools">
 
-    <div><p id="annotation"></p></div>
+    <div>
+      <p id="cluster"><b>Cluster:</b></p>
+      <p id="annotation"><b>Annotation:</b></p>
+      <p id="stage"><b>Stage:</b></p>
+    </div>
 
     <h2>Data</h2>
 
@@ -66,10 +70,10 @@
     <!-- <label for="weights" class="tooltip u-pull-left" title="Change layout">Active layout</label> -->
     <div class="u-cf"></div>
     <select id="weights">
-        <option value="weight">Forward</option>
-        <option value="weight2">Backward</option>
-        <option value="weight3">Mutual Forward</option>
-      </select>
+        <option value="weightCompensatedForward">Mutual Forward</option>
+        <option value="weightForward">Forward</option>
+        <option value="weightBackward">Backward</option>
+    </select>
     <!-- <i id="redo-layout" class="fa fa-refresh action-icon tooltip" title="Redo layout"></i> -->
 
     <h2>Tracing</h2>
@@ -86,10 +90,11 @@
     </div>
 
     <div class="u-cf">
-    <select id="hola">
+    <select id="tracing">
       <option value="false">False</option>
-      <option value="backward">Backward</option>
-      <option value="forward">Forward</option>
+      <option value="weightBackward">Backward</option>
+      <option value="weightForward">Forward</option>
+      <option value="weightCompensatedForward">Forward</option>
       <option value="expression">Expression</option>
     </select>    
     </div>

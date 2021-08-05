@@ -12,14 +12,14 @@
     "style": {
       "width": 60,
       "height": 60,
-      "label": "data(name)",
+      "label": "data(cluster)",
       "font-size": "12px",
       "text-valign": "center",
       "text-halign": "center",
       "background-color": "mapData(stage, 6.5, 8.5,blue,red)",
       "text-outline-color": "#555",
-      "text-outline-width": "1px",
-      "color": "#fff",
+      "text-outline-width": "0px",
+      "color": "white",
       "overlay-padding": "6px",
       "z-index": "10"
       }

@@ -1,5 +1,7 @@
 var x = [1,2,3,4,5,6,7,8,9];
 var y = [0,0,0,0,0,0,0,0,0];
+let w;
+let c;
 
 (function(){
   document.addEventListener('DOMContentLoaded', function(){
@@ -37,11 +39,13 @@ var y = [0,0,0,0,0,0,0,0,0];
       cy.style().fromJson( stylesheet ).update();
 
       if ($color.value == "stage"){
-        var y = "mapData("+$color.value+",6.5,8.5,blue,red)"
+        c = "mapData("+$color.value+",6.5,8.5,blue,red)"
       }else{
-        var y = "mapData("+$color.value+",0,1,blue,red)"
+        c = "mapData("+$color.value+",0,1,blue,red)"
       }
-      cy.style().selector("node").style({'background-color':y}).update()
+      cy.style().selector("node").style({'background-color':c}).update()
+
+      // Plotly.newPlot('myDiv', plotData);
     };
     let applyStylesheetFromSelect = () => Promise.resolve( $color.value ).then( getStylesheet ).then( applyStylesheet );
 
@@ -53,13 +57,14 @@ var y = [0,0,0,0,0,0,0,0,0];
     };
     let applyWeights = weight => {
 
-      cy.style().fromJson( weight ).update();
+      // cy.style().fromJson( weight ).update();
 
       switch ($weights.value){
-        case "weight": var y = "mapData(weight,0,1,blue,red)"; break;
-        case "weight2": var y = 3; break;
+        case "weightForward": w = "mapData(weightForward,0,1,0,10)"; break;
+        case "weightBackward": w = "mapData(weightBackward,0,1,0,10)"; break;
+        case "weightCompensatedForward": w = "mapData(weightCompensatedForward,0,1,0,10)"; break;
       }
-      cy.style().selector("edge").style({'width':y}).update()
+      cy.style().selector("edge").style({'width':w}).update()
     };
     let applyWeightsFromSelect = () => Promise.resolve( $weights.value ).then( getWeights ).then( applyWeights );
 
@@ -99,13 +104,15 @@ var y = [0,0,0,0,0,0,0,0,0];
       tryPromise( applyDatasetFromSelect ).then( applyLayoutFromSelect );
     });
 
-    $color.addEventListener('change', applyStylesheetFromSelect);
+    $color.addEventListener('change', function(){
+      tryPromise( applyStylesheetFromSelect ).then( applyWeightsFromSelect );
+    });
 
-    $weights.addEventListener('change', applyWeightsFromSelect);
+    $weights.addEventListener('change', function(){
+      tryPromise( applyStylesheetFromSelect ).then( applyWeightsFromSelect );
+    });
 
-    // $('#redo-layout').addEventListener('click', applyLayoutFromSelect);
-
-    let $a = $('#hola');
+    let $a = $('#tracing');
     cy.bind('click', 'node', function(node) {
       Promise.resolve($a)
       // console.log(node.cyTarget.predecessors().edges());
@@ -128,16 +135,18 @@ var y = [0,0,0,0,0,0,0,0,0];
           });
           break;
         case "expression":
-          Promise.resolve($color)
-          x 
-          y[] = node.cyTarget.data($color.value)
+          Promise.resolve($color) 
+          y[node.cyTarget.data("stageInt")] = node.cyTarget.data($color.value)
           console.log(node.cyTarget.data($color.value))
           Plotly.newPlot('myDiv', plotData);
           break;
         }
-      let name = node.cyTarget.data("id");
-      document.getElementById('annotation').innerHTML = "<b>Node: </b>"+name;
-      console.log(name)
+      let cluster = node.cyTarget.data("cluster");
+      let annotation = node.cyTarget.data("annotation");
+      let stage = node.cyTarget.data("stage");
+      document.getElementById('cluster').innerHTML = "<b>Cluster: </b>"+cluster;
+      document.getElementById('annotation').innerHTML = "<b>Annotation: </b>"+annotation;
+      document.getElementById('stage').innerHTML = "<b>Stage: </b>E"+stage;
     });
     cy.bind('cxttap', 'node', function(node) {
       // console.log(node.cyTarget.predecessors().edges());
@@ -171,8 +180,10 @@ var y = [0,0,0,0,0,0,0,0,0];
         type: 'scatter'
       }
     ];
-    console.log(plotData[0]["x"][1])
-    Plotly.newPlot('myDiv', plotData);
+    var plotLayout = {
+      title:{text: $color.value}
+    }
+    Plotly.newPlot('myDiv', plotData, plotLayout);
 
   });
   
