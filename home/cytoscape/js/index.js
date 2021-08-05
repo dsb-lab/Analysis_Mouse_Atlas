@@ -1,3 +1,6 @@
+var x = [1,2,3,4,5,6,7,8,9];
+var y = [0,0,0,0,0,0,0,0,0];
+
 (function(){
   document.addEventListener('DOMContentLoaded', function(){
     let $$ = selector => Array.from( document.querySelectorAll( selector ) );
@@ -124,7 +127,14 @@
             }
           });
           break;
-      }
+        case "expression":
+          Promise.resolve($color)
+          x 
+          y[] = node.cyTarget.data($color.value)
+          console.log(node.cyTarget.data($color.value))
+          Plotly.newPlot('myDiv', plotData);
+          break;
+        }
       let name = node.cyTarget.data("id");
       document.getElementById('annotation').innerHTML = "<b>Node: </b>"+name;
       console.log(name)
@@ -149,10 +159,24 @@
     // cy.off("tap", "node", (evt) => {evt.cyTarget.successors().animate({
     //     style: {lineColor: "grey"} }) })
   
+    var plotData = [
+      {
+        x: x,
+        y: y,
+        error_y: {
+          type: 'data',
+          array: [1, 2, 3],
+          visible: true
+        },
+        type: 'scatter'
+      }
+    ];
+    console.log(plotData[0]["x"][1])
+    Plotly.newPlot('myDiv', plotData);
+
   });
   
 })();
-
 
 // tooltips with jQuery
 $(document).ready(() => $('.tooltip').tooltipster());
