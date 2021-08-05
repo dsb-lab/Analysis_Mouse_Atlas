@@ -76,13 +76,13 @@
     </select>
     <!-- <i id="redo-layout" class="fa fa-refresh action-icon tooltip" title="Redo layout"></i> -->
 
-    <h2>Tracing</h2>
+    <h2>Pointer</h2>
 
-    <div>Method for tracing edges and its links, choose between:
+    <div>Effect of the pointer when clicking:
       <ul>
-        <li><b>False</b> Deactivated.</li>
-        <li><b>Backward</b> Mark in red edges connecting the node with past nodes.</li>
-        <li><b>Forward</b> Mark in red edges connecting the node with future nodes.</li>
+        <li><b>Nothing</b> Deactivated.</li>
+        <li><b>Tracing</b> Mark in red edges connecting the node with nodes forward/backward depending on the weight style chosen.</li>
+        <li><b>Expression</b> Chose new clusters for the time plots.</li>
       </ul>
 
       Click with second button to unmark all marked edges from a node.
@@ -91,16 +91,17 @@
 
     <div class="u-cf">
     <select id="tracing">
-      <option value="false">False</option>
-      <option value="weightBackward">Backward</option>
-      <option value="weightForward">Forward</option>
-      <option value="weightCompensatedForward">Forward</option>
+      <option value="false">Nothing</option>
+      <option value="tracing">Tracing</option>
       <option value="expression">Expression</option>
     </select>    
     </div>
   </div>
 
-  <div id='myDiv' class="footer-link"></div>
+  <div id='myDiv' class="time-track"></div>
+
+  <div id='umap' class="umap"></div>
+
 </body>
 
 </html>

@@ -1,7 +1,21 @@
 var x = [1,2,3,4,5,6,7,8,9];
-var y = [0,0,0,0,0,0,0,0,0];
+var y = [6.5,6.75,7.0,7.25,7.5,7.75,8.0,8.25,8.5];
+var stdY = [0,0,0,0,0,0,0,0,0];
+var xNodeId = ["n_0","n_7","n_15","n_41","n_26","n_54","n_69","n_116","n_88"];
+var xLabels = ["E6.5_0","E6.75_0","E7.0_0","E7.25_0","E7.5_0","E7.75_0","E8.0_0","E8.25_0","E8.5_0"];
 let w;
 let c;
+
+function rotate() { 
+  setTimeout(function (){ 
+    cy.nodes().positions(
+      function( i, node ){ 
+        return { x: node.position('y')*3, y: -1*node.position('x')*1.1
+      }; 
+  }); 
+  cy.fit() 
+  },100); 
+}
 
 (function(){
   document.addEventListener('DOMContentLoaded', function(){
@@ -45,7 +59,16 @@ let c;
       }
       cy.style().selector("node").style({'background-color':c}).update()
 
-      // Plotly.newPlot('myDiv', plotData);
+      plotLayout["title"]["text"] = $color.value
+      let ii = 0;
+      for (let i = 0; i < 9; i++){
+        if (xLabels[i] != "notSet"){
+          ii = xNodeId[i];
+          y[i] = cy.getElementById(ii).data($color.value)  
+        }
+      }
+      plotData["y"] = y
+      Plotly.newPlot('myDiv', plotData, plotLayout);
     };
     let applyStylesheetFromSelect = () => Promise.resolve( $color.value ).then( getStylesheet ).then( applyStylesheet );
 
@@ -83,6 +106,7 @@ let c;
       }
 
       let l = prevLayout = cy.makeLayout( layout );
+      rotate()
 
       return l.run().promiseOn('layoutstop');
     }
@@ -115,30 +139,49 @@ let c;
     let $a = $('#tracing');
     cy.bind('click', 'node', function(node) {
       Promise.resolve($a)
+      Promise.resolve($weights)
       // console.log(node.cyTarget.predecessors().edges());
       switch($a.value){
         case "false":
 
           break;
-        case "backward":
-          node.cyTarget.incomers().edges().animate({
-            style: {
-              lineColor: "red"
-            }
-          });
-          break;
-        case "forward":
-          node.cyTarget.outgoers().edges().animate({
-            style: {
-              lineColor: "red"
-            }
-          });
-          break;
+        case "tracing":
+          switch ($weights.value){
+            case "weightBackward":
+              node.cyTarget.incomers().edges().animate({
+                style: {
+                  lineColor: "red"
+                }
+              });
+              break; 
+            case "weightCompensatedBackward":
+              node.cyTarget.incomers().edges().animate({
+                style: {
+                  lineColor: "red"
+                }
+              });
+              break;          
+            case "weightForward":
+              node.cyTarget.outgoers().edges().animate({
+                style: {
+                  lineColor: "red"
+                }
+              });
+              break;
+            case "weightCompensatedForward":
+              node.cyTarget.outgoers().edges().animate({
+                style: {
+                  lineColor: "red"
+                }
+              });
+              break;          
+          }
         case "expression":
           Promise.resolve($color) 
           y[node.cyTarget.data("stageInt")] = node.cyTarget.data($color.value)
-          console.log(node.cyTarget.data($color.value))
-          Plotly.newPlot('myDiv', plotData);
+          xLabels[node.cyTarget.data("stageInt")] = node.cyTarget.data("cluster")
+          xNodeId[node.cyTarget.data("stageInt")] = node.cyTarget.data("id")
+          Plotly.newPlot('myDiv', plotData, plotLayout);
           break;
         }
       let cluster = node.cyTarget.data("cluster");
@@ -155,7 +198,6 @@ let c;
           lineColor: "lightgrey"
         }
       });
-      console.log(node.cyTarget.predecessors().edges());
       node.cyTarget.outgoers().edges().animate({
         style: {
           lineColor: "lightgrey"
@@ -174,16 +216,45 @@ let c;
         y: y,
         error_y: {
           type: 'data',
-          array: [1, 2, 3],
+          array: stdY,
           visible: true
         },
         type: 'scatter'
       }
     ];
     var plotLayout = {
-      title:{text: $color.value}
+      title:{text: $color.value},
+      xaxis:{
+        tickmode: "array",
+        tickvals: [1,2,3,4,5,6,7,8,9],
+        ticktext: xLabels
+      }
     }
     Plotly.newPlot('myDiv', plotData, plotLayout);
+
+    let getDataset2 = name => fetch(`datasets/data2.json`).then( toJson );
+    let applyDataset2 = dataset => {
+      // so new eles are offscreen
+      // console.log(dataset)
+
+      var plotUmap = [
+        {
+          x: dataset["x"],
+          y: dataset["y"],
+          mode: 'markers',
+          type: 'scatter'
+        }
+      ];
+      var plotUmapLayout = {
+        title:{text: $color.value},
+      }
+      Plotly.newPlot('umap', plotUmap, plotUmapLayout);
+
+      return
+    }
+    function applyDatasetFromSelect2(){ return Promise.resolve( $dataset.value ).then( getDataset2 ).then( applyDataset2 )};
+    applyDatasetFromSelect2()
+
 
   });
   
