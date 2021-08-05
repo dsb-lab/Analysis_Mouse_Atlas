@@ -105,8 +105,7 @@
     let $a = $('#hola');
     cy.bind('click', 'node', function(node) {
       Promise.resolve($a)
-      console.log($a.value)
-      console.log(node.cyTarget.predecessors().edges());
+      // console.log(node.cyTarget.predecessors().edges());
       switch($a.value){
         case "false":
 
@@ -126,9 +125,12 @@
           });
           break;
       }
+      let name = node.cyTarget.data("id");
+      document.getElementById('annotation').innerHTML = "<b>Node: </b>"+name;
+      console.log(name)
     });
     cy.bind('cxttap', 'node', function(node) {
-      console.log(node.cyTarget.predecessors().edges());
+      // console.log(node.cyTarget.predecessors().edges());
       node.cyTarget.incomers().edges().animate({
         style: {
           lineColor: "lightgrey"
