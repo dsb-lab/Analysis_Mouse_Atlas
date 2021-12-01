@@ -2,7 +2,7 @@ Docker file for the analysis of Pijuan and Sala.
 
 **Warning**: The analysis has not been completed yet. Some parts of the code ar nonsense so be careful to run it for now.
 
-**Warning**: The bash files are have been writen for Linux. Maybe in Mac or PC, the lines are different. The scripts are pretty simple so they should be straighforward to adapt.
+**Warning**: The bash files have been writen for Linux. Maybe in Mac or PC, the lines are different. The scripts are pretty simple so they should be straighforward to adapt.
 
 # Use without docker
 
@@ -18,21 +18,6 @@ The necessary data for the analysis can be obtained running
 
 # Use with Docker
 
-## 1. Building the docker
-A docker image with the required python version and packages can be created running
-
-```
-./build_git
-```
-
-## 2. Getting the data
-The necessary data for the analysis can be obtained running
-
-```
-./download_data
-```
-
-## 3. Running the docker
 For running the docker and go over the analysis steps in a jupyter lab session, just run,
 
 ```
