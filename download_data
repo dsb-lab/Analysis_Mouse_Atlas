@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# Comment if you already have the data
-curl https://content.cruk.cam.ac.uk/jmlab/atlas_data.tar.gz > ./home/dataRaw/atlas_data.tar.gz
+# Get Mouse atlas data from Marioni
+curl https://content.cruk.cam.ac.uk/jmlab/atlas_data.tar.gz > ./Analysis/Pijuan/rawData/atlas_data.tar.gz
 
-tar -xf ./home/dataRaw/atlas_data.tar.gz atlas/genes.tsv atlas/barcodes.tsv atlas/meta.tab atlas/raw_counts.mtx -C ./home/dataRaw
-mv -f ./atlas/* ./home/dataRaw
+mkdir Analysis/Pijuan/rawData
+tar -xf ./Analysis/Pijuan/rawData/atlas_data.tar.gz atlas/genes.tsv atlas/barcodes.tsv atlas/meta.tab atlas/raw_counts.mtx -C ./Analysis/Pijuan/rawData
+mv -f ./atlas/* ./Analysis/Pijuan/rawData
 rm -r ./atlas
