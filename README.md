@@ -8,12 +8,11 @@ Docker file for the analysis of Mouse Gastruloids.
 
 The repository is structured as follows:
 
-1. Data: Contains the raw data of the different datasets used for analysis and integration. It is separated of the analysis allowing it to locate it in some remote memory place as the files can be big for some memories.
-2. Analysis: Contains the scripts of the analysis for each dataset individually. So far, the following analysis are present:
+ - **Analysis**: Contains the scripts of the analysis for each dataset individually. So far, the following analysis are present:
     2.1. Pijuan: Preprocessing of the Pijuan dataset from the raw count matrix until the annotation of the different clusters of the analysis.
-3. assets: Auxiliar images for the this README file.
-4. download_data.sh: Bash file that automatizes the process of downloading the raw data and storing it in the Data folder.
-5. docker_run.sh: Bash file that launches the docker in a jupyter lab environment for working with the analysis.
+ - **assets**: Auxiliar images for the this README file.
+ - **download_data.sh**: Bash file that automatizes the process of downloading the raw data and storing it in the Data folder.
+ - **docker_run.sh**: Bash file that launches the docker in a jupyter lab environment for working with the analysis.
 
 # Setting up the environment
 
