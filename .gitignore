@@ -1,40 +1,17 @@
-Analysis/*/.*
-Analysis/*/rawData/*
-!Analysis/*/rawData/.gitkeep
-Analysis/*/atlas_data.tar.gz
-Analysis/*/__pycache__
+.*
+__pycache__/*
+!.gitignore
 
 Analysis/*/Annotations/*
 !Analysis/*/Annotations/.gitkeep
-!Analysis/*/Annotations/Annotations.*
 
-Analysis/*/dataOut/*
-!Analysis/*/dataOut/.gitkeep
-Analysis/*/dataOut/3_QC_Doublets_Stripped/*
-!Analysis/*/dataOut/3_QC_Doublets_Stripped
-!Analysis/*/dataOut/3_QC_Doublets_Stripped/.gitkeep
-Analysis/*/dataOut/4_Batch_Correction/*
-!Analysis/*/dataOut/4_Batch_Correction
-!Analysis/*/dataOut/4_Batch_Correction/.gitkeep
-!Analysis/*/dataOut/5_Clustering
-!Analysis/*/dataOut/5_Clustering/.gitkeep
+Analysis/*/data/*
+!Analysis/*/data/.gitkeep
 
-Analysis/*/Plots/1_QC/*
-!Analysis/*/Plots/1_QC/.gitkeep
-Analysis/*/Plots/2_Normalisation/*
-!Analysis/*/Plots/2_Normalisation/.gitkeep
-Analysis/*/Plots/3_QC_Doublets_Stripped/*
-!Analysis/*/Plots/3_QC_Doublets_Stripped/.gitkeep
-Analysis/*/Plots/4_Batch_Correction/*
-!Analysis/*/Plots/4_Batch_Correction/.gitkeep
-Analysis/*/Plots/5_Clustering/*
-!Analysis/*/Plots/5_Clustering/.gitkeep
-Analysis/*/Plots/6_Time_Integration/*
-!Analysis/*/Plots/6_Time_Integration/.gitkeep
+Analysis/*/Plots/*
+!Analysis/*/Plots/.gitkeep
 
-Analysis/*/Tables/1_QC/*
-!Analysis/*/Tables/1_QC/*.gitkeep
-Analysis/*/Tables/5_Clustering/*
-!Analysis/*/Tables/5_Clustering/*.gitkeep
+Analysis/*/Tables/*
+!Analysis/*/Tables/.gitkeep
 
 *.zip

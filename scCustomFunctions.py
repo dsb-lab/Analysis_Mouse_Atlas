@@ -12,7 +12,7 @@ import networkx as nx
 from pygam import LinearGAM, s, f
 import random
 
-def loadData(name="./dataOut/Raw.h5ad",QC_basic=False,QC_imputed=False,Normalized=False,Log1p=False,sample="All",stage="All"):
+def loadData(name="./data/qc.h5ad",QC_basic=False,QC_imputed=False,Normalized=False,Log1p=False,sample="All",stage="All"):
     
     a = scp.read(name)
 
