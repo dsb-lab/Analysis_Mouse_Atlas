@@ -4,29 +4,54 @@ Docker file for the analysis of Mouse Gastruloids.
 
 **Warning**: The bash files have been writen for Linux. Maybe in Mac or PC, the lines are different. The scripts are pretty simple so they should be straighforward to adapt.
 
-# Use without Docker
+# Repository structure
 
-In the file `requirements.txt` there is the defined basic packages used and its versions for the analysis. The analsys is performed using Python3.8.8.
+The repository is structured as follows:
 
-Inside home, you will find all the analysis scripts.
+1. Data: Contains the raw data of the different datasets used for analysis and integration. It is separated of the analysis allowing it to locate it in some remote memory place as the files can be big for some memories.
+2. Analysis: Contains the scripts of the analysis for each dataset individually. So far, the following analysis are present:
+    2.1. Pijuan: Preprocessing of the Pijuan dataset from the raw count matrix until the annotation of the different clusters of the analysis.
+3. assets: Auxiliar images for the this README file.
+4. download_data.sh: Bash file that automatizes the process of downloading the raw data and storing it in the Data folder.
+5. docker_run.sh: Bash file that launches the docker in a jupyter lab environment for working with the analysis.
 
-The necessary data for the analysis can be obtained running
+# Setting up the environment
+
+## Download the data automatically
+
+In order to prepare for a fresh start of the analysis it is required that the present folder contains a folder called Data. This folder can be link folder that redirects to any place where you want to store the data as long as you can access this place with your account privileges. For downloading automatically the data, just execute the commant:
 
 ```
-./download_data
+./download_data.sh
 ```
 
-# Use with Docker
+This can take a while.
 
-All the analysis has been done in a docker image for reproducibility purposes. Check it in [dockerhub](https://hub.docker.com/r/dsblab/single_cell_analysis) or [github](https://github.com/dsb-lab/Docker-single-cell-analysis/tree/v0.2).
+## Download the data by hand (if the previous did not work)
 
-For running the docker and go over the analysis steps in a jupyter lab session, just run,
+If the script doens't work for you. You can download the data by hand at the following places:
+
+Pijuan dataset:
+> https://content.cruk.cam.ac.uk/jmlab/atlas_data.tar.gz
+
+When extracting the data from the `atlas_data.tar.gz` file, you will have to have, at least, the following data:
+
+> Data/Pijuan/raw/barcodes.tsv
+> Data/Pijuan/raw/genes.tsv
+> Data/Pijuan/raw/raw_counts.mtx
+> Data/Pijuan/raw/meta.tab
+
+# Execute the jupyter lab environment
+
+In order to go over the hole analysis with reproducibility, we developed a docker environment for this situation with all the tools already installed.
+
+For running the environment, you will require to install [Docker](https://www.docker.com/) in your computer. Once done, just execute in a terminal inside the path of the repository:
 
 ```
-./docker/run.sh
+./docker_run.sh
 ```
 
-Once run, the docker will be working and executing in port 8888. Change the channel in the `run.sh` script if you want to run it in some other channel. In the terminal you will find a token code that is generated for security reasons:
+Once run, the docker will be working and executing in port the port specified by the variable `CHANNEL` in the docker_run.sh file. Change the channel in the  script if you want to run it in some other channel. In the terminal you will find a token code that is generated for security reasons:
 
 ![](assets/token.png)
 
@@ -35,11 +60,8 @@ Copy that number. For accessing the session, open your favorite folder brwoser a
 ```
 firefox localhost::8888
 ```
-
-it will open a jupyterlab session that will ask for a password or token.  
+where the 8888 if the channel you chose. It will open a jupyterlab session that will ask for a password or token.  
 
 ![](assets/jupyterlab.png)
 
-Copy the token you obtained before and you will be set up! 
-
-Anything in the `home` folder can be seen by the docker and you and will be saved after the docker has finished.
+Copy the token you obtained before and you will be prompted to the analysis environment! 
