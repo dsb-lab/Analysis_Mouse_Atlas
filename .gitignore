@@ -15,4 +15,10 @@ Analysis/*/Plots/*
 Analysis/*/Tables/*
 !Analysis/*/Tables/.gitkeep
 
+Analysis/*/results/*
+!Analysis/*/results/.gitkeep
+
+
+Analysis applications
+
 *.zip

@@ -10,7 +10,9 @@ The structure of the analysis is divided in different scrips that are described 
 
 From the count matrix provided by the original authors, we create the Annotated Data object for the rest of the pipeline.
 
-## 1 QC.ipynb
+## 1 Quality Control and Dimensionality Reduction.ipynb
+
+### Quality Control
 
 In here, we perform a Quality Control of the data. 
 
@@ -31,11 +33,36 @@ Before this control, we account for doublet cells by running a Scrublet algorith
     - Retained 50 Principal Components (PCs) `scanpy.pp.pca`.
     - KNN matrix generated with the 50 PCs and "correlation" metric as implemented in `scanpy.pp.neighbors`.
 
-We choose the doublet score to impute as cells base on a unique threshold for all doublet bimodality diagrams. (To be done: Performing an alternative control performing the doublet score trhough an alternative method does not change scores obtained.)
+We choose the doublet score to impute as cells base on a unique threshold for all doublet bimodality diagrams. Up to this point of the analysis we do not remove any cells from the dataset.
+### Dimensionality reduction
 
-After this procedure, we compare the number of cells imputed by our procedure and the cells removed during the analysis of the original paper. We notice a big discrepancy of imputed cells, being our procedure far more permissive.
+In this stage, we make a dimensionality reduction of the RNA space that encodes the information in a relevant space. **This analysis is performed for each temporal Stage of development independently as different times during development may be captured more effectively with different effective spaces.**
 
-Finally, we removed the imputed cells from the dataset and save the new data.
+For obtaining each reduced space we follow the following pipeline:
 
-## 2 Dimensionality Reduction.ipynb
+1. Normalize the total count to the mean number of counts among all cells of the dataset.
+2. Log normalize the counts. 
+3. Select Highly Varying Genes using Seurat algorithm as implemented by `scanpy.pp.highly_varying_genes`. We remove from the highly varying genes those genes related to growth and sex.
+4. Perform PCA analysis over the HVGs divemnsions and retain the 50 most variable PCs as our reduced space. We use the implementation of `scanpy.pp.pca`.
+
+For visualization of the data, we further perform the following steps:
+
+5. KNN matrix generated with the 50 PCs and "correlation" metric as implemented in `scanpy.pp.neighbors`.
+6. UMAP in 2D representations as implemented in `scanpy.tl.umap`.
+
+Visualization of the reduced space by stages shows batch effects distortions that should be corrected. We correct the batch effects with the follwing algorithms:
+
+1. Harmony provided in `scanpy.external.pp.harmony_integrate`.
+
+The PCS corrected show a proper correction of the batch effects between samples for all stages.
+
+### Removal of imputed cells
+
+After correcting for batch effects, we visualize the location of stripped and doublets cells that where imputed during the Quality Control. Most of the imputed cells show grouped in clusters. This is consistent with our expectation of stripped and doublet cells to group as "cell types" of artificial nature. 
+
+For comparison, we visualize the cells that we impute in our analysis and those from the original paper from Marioni finding a great discrepancy in the removal of cells. Putting a more restrictive threshold to our analysis recover a closer cleaning of the original analysis showing that our filtering is in general more permissive.
+
+Having inspected the reasoable outcome of the imputed cells, we proceed to remove those and recompute the reduced space of the cleaned dataset from steps 1-6 described above and save the data.
+
+## 3 Dimensionality Reduction.ipynb
 
