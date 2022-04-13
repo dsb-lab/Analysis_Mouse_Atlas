@@ -3,6 +3,7 @@ import sys, os
 import pandas as pd
 import scipy as sp
 import scanpy as scp
+from sklearn.decomposition import TruncatedSVD
 
 class HiddenPrints:
     """
@@ -207,9 +208,11 @@ def dimensionality_reduction_pipeline(adata,
     adata.obsm[add_key] = np.zeros([adata.shape[0],n_comps])
 
     for stage in adata.obs[batch_key].unique():
-                
+                        
         #Extract stage
-        b = adata[adata.obs[batch_key]==stage,:].copy()
+        l = adata.obs[batch_key]==stage
+        b = scp.AnnData(adata.X[l,:].copy())
+        b.obs.index = adata.obs[l].index
                     
         #Compute Feature selection
         if feature_reduction_flavor != None:
@@ -218,10 +221,10 @@ def dimensionality_reduction_pipeline(adata,
             if exclude_genes != None:
                 b.var.loc[:,"higly_variable"] = [not ((g in exclude_genes) or not hv) for g,hv in b.var.loc[:,[key_exclude_list,"highly_variable"]].values]
                     
-        #Compute pca
-        scp.pp.pca(b,n_comps=n_comps)
+        #Compute pca using TrucatedSVD
+        X = TruncatedSVD(n_components=50,random_state=0).fit_transform(b.X[:,b.var.loc[:,"highly_variable"].values])
         
-        adata.obsm[add_key][b.obs.index.values.astype(int),:] = b.obsm["X_pca"]
+        adata.obsm[add_key][b.obs.index.values.astype(int),:] = X
         
     return
 
@@ -251,7 +254,10 @@ def harmony_integrate_batches(adata,
     for stage in adata.obs[batch_key].unique():
                 
         #Extract stage
-        b = adata[adata.obs[batch_key]==stage,:].copy()
+        l = adata.obs[batch_key]==stage
+        b = scp.adata(adata.obsm[basis][l,:])
+        b.obs.index = adata.obs[l].index
+        b.obs = adata.obs.loc[l,:]
         b.obs.loc[:,sample_key] = b.obs.loc[:,sample_key].astype(str)
                     
         #Compute harmony
@@ -260,10 +266,10 @@ def harmony_integrate_batches(adata,
         adata.obsm[add_key][b.obs.index.values.astype(int),:] = b.obsm["X_pca_harmony"]
         
     return
-        
+
 def neighbors_batches(adata,
                       use_rep="X_pca",
-                      add_key="neighbors_Stage",
+                      add_key="Neighbors_Stage",
                       batch_key="Stage",
                       *args,**kwargs):
     """
@@ -272,7 +278,7 @@ def neighbors_batches(adata,
         Input:
             adata:Annotated data in which compute the quality control measures.
             use_rep="X_pca": Rep to use for the neighbors search. To be added in uns.
-            add_key="neighbors_Stage": Batch key over which perform the analysis independently. If None, the dataset is considered a unique sample.
+            add_key="Neighbors_Stage": Batch key over which perform the analysis independently. If None, the dataset is considered a unique sample.
             sample_key="Sample": Batch key over which perform the analysis independently.
             args: Arguments to be passed to harmony_integrate.
             kwargs: Keyword arguments to be passed to scp.pp.neighbors.
@@ -285,11 +291,13 @@ def neighbors_batches(adata,
     adata.uns[add_key]["distances"] = sp.sparse.lil_matrix((adata.shape[0],adata.shape[0]))
 
     for stage in adata.obs[batch_key].unique():
-
+        
         #Extract stage
-        b = adata[adata.obs[batch_key]==stage,:].copy()
-
-        scp.pp.neighbors(b,use_rep=use_rep,*args,**kwargs)
+        l = adata.obs[batch_key]==stage
+        b = scp.AnnData(adata.obsm[use_rep][l,:].copy()) 
+        b.obs.index = adata.obs[l].index
+        
+        scp.pp.neighbors(b,use_rep="X",*args,**kwargs)
 
         for i in b.uns["neighbors"].keys():
             adata.uns[add_key][i] = b.uns["neighbors"][i]
@@ -310,7 +318,7 @@ def neighbors_batches(adata,
     return
 
 def umap_batches(adata,
-                      neighbors_key="neighbors_Stage",
+                      neighbors_key="Neighbors_Stage",
                       add_key="X_umap_Stage",
                       batch_key="Stage",
                       *args,**kwargs):
@@ -339,5 +347,77 @@ def umap_batches(adata,
         scp.tl.umap(b,neighbors_key=neighbors_key,*args,**kwargs)
         
         adata.obsm[add_key][b.obs.index.values.astype(int),:] = b.obsm["X_umap"]
+        
+    return
+
+def louvain_batches(adata,
+                      neighbors_key="Neighbors_Stage",
+                      add_key="Louvain_Stage",
+                      batch_key="Stage",
+                      resolution=.1,
+                      *args,**kwargs):
+    """
+        Function that automatizes the louvain clustering over batches.
+        
+        Input:
+            adata:Annotated data in which compute the quality control measures.
+            neighbors_key="Neighbors_Stage": Key of neighbors over which cluster the basis.
+            add_key="Louvain_Stage": Key to be added with the clusters. To be added in obs.
+            batch_key="Stage": Batch key over which perform the analysis independently.
+            resolution=.1: Resolution of the clustering.
+            args: Arguments to be passed to harmony_integrate.
+            kwargs: Keyword arguments to be passed to harmony_interagte.
+        Output:
+            Annotated data with the harmony corrected pca after the batch correction added to .obsm.
+    """
+    
+    adata.obsm[add_key] = np.zeros_like(adata.obsm[basis])
+
+    for stage in adata.obs[batch_key].unique():
+                
+        #Extract stage
+        b = adata[adata.obs[batch_key]==stage,:].copy()
+        
+        #Make clustering
+        scp.tl.louvain(b,neighbors_key=neighbors_key,resolution=resolution,*args,**kwargs)
+        
+        #Add to the original data
+        adata.obs.loc[b.obs.index.values,add_key] = b.obs.loc[:,"louvain"]
+        
+    return
+
+def leiden_batches(adata,
+                      neighbors_key="Neighbors_Stage",
+                      add_key="Louvain_Stage",
+                      batch_key="Stage",
+                      resolution=.1,
+                      *args,**kwargs):
+    """
+        Function that automatizes the leiden clustering over batches.
+        
+        Input:
+            adata:Annotated data in which compute the quality control measures.
+            neighbors_key="Neighbors_Stage": Key of neighbors over which cluster the basis.
+            add_key="Louvain_Stage": Key to be added with the clusters. To be added in obs.
+            batch_key="Stage": Batch key over which perform the analysis independently.
+            resolution=.1: Resolution of the clustering.
+            args: Arguments to be passed to harmony_integrate.
+            kwargs: Keyword arguments to be passed to harmony_interagte.
+        Output:
+            Annotated data with the harmony corrected pca after the batch correction added to .obsm.
+    """
+    
+    adata.obsm[add_key] = np.zeros_like(adata.obsm[basis])
+
+    for stage in adata.obs[batch_key].unique():
+                
+        #Extract stage
+        b = adata[adata.obs[batch_key]==stage,:].copy()
+        
+        #Make clustering
+        scp.tl.leiden(b,neighbors_key=neighbors_key,resolution=resolution,*args,**kwargs)
+        
+        #Add to the original data
+        adata.obs.loc[b.obs.index.values,add_key] = b.obs.loc[:,"louvain"]
         
     return
