@@ -68,3 +68,28 @@ Having inspected the reasoable outcome of the imputed cells, we proceed to remov
 
 ## 2 Clustering and Annotation.ipynb
 
+In this file, we perform clustering and annotation of the different stages of the dataset.
+
+### Clustering
+
+Following the same reasoning as previously stated, we perfrom the clustering and annotation over each time point independently.
+
+We cluster the different stages using a the following algorithms:
+
+1. Louvain
+
+In order to check if the clusters are biologically relevant, we check the distribution of doublet expression in those clusters. We can see that several clusters contain a specially high level of doublet expression in comparison with the average. Marking those clusters that clusters that are 2 standard deviations over the average doublet score per cluster, we see that the majority of those clusters are small populations of outliers or belong to regions between clusters, as can be clearly seen in stages "E8.25" and "E8.5". The presence of these clusters with atypical overexpression of doublet scores may indicate that we did not remove all possible doublets from the dataset.
+
+### Annotation
+
+The manual annotation is performed over each stage independently.
+
+For the manual annotation we use the following information:
+
+1. A list of Differentially Expressed genes of each cluster vs. the rest.
+2. Plots of gene expression over the UMAP for characteristic genes (list of genes to be found in parameters.py).
+
+The dataset was previously annotated by the authors of the dataset. In order to check the potential discrepancies between annotations:
+
+ 1. We make comparative plots of the annotations (each column adds to one).
+ 2. Plots of their clusters and annotations over our representation.
