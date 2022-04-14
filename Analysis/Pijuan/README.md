@@ -22,7 +22,9 @@ The quality control is based on the following metrics:
 2. Total count of non-zero genes per cell
 3. Mitochondrial fraction
 
-The dataset as already provided by the authors has removed the tails of the total counts. The only group of cells that have not been removed are stripped cells, as detected by the bimodality at very low mitochondrial fractions. We set a threshold for imputing these cells aas sttripped cells.
+The dataset as already provided by the authors has removed the tails of the total counts. The only group of cells that have not been removed are stripped cells, as detected by the bimodality at very low mitochondrial fractions. We set a threshold for imputing these cells as stripped cells.
+
+The scatter plot shows an anomalous tendency formed by a second mode on the distribution of the data. This second modality is comming from hematopoietic cells. These cells have a lower varibility of genes and read counts as the nucleus is shutted down, which explains the atypical count number and the origin of the bimodality.
 
 Before this control, we account for doublet cells by running a Scrublet algorithm for the detectiuon of doublets. We perform this algorithm with the following characteristics:
 
@@ -56,7 +58,7 @@ Visualization of the reduced space by stages shows batch effects distortions tha
 
 The PCS corrected show a proper correction of the batch effects between samples for all stages.
 
-### Removal of imputed cells
+### Imputed cells
 
 After correcting for batch effects, we visualize the location of stripped and doublets cells that where imputed during the Quality Control. Most of the imputed cells show grouped in clusters. This is consistent with our expectation of stripped and doublet cells to group as "cell types" of artificial nature. 
 
@@ -64,5 +66,5 @@ For comparison, we visualize the cells that we impute in our analysis and those 
 
 Having inspected the reasoable outcome of the imputed cells, we proceed to remove those and recompute the reduced space of the cleaned dataset from steps 1-6 described above and save the data.
 
-## 3 Dimensionality Reduction.ipynb
+## 2 Clustering and Annotation.ipynb
 
