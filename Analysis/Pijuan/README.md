@@ -93,3 +93,44 @@ The dataset was previously annotated by the authors of the dataset. In order to 
 
  1. We make comparative plots of the annotations (each column adds to one).
  2. Plots of their clusters and annotations over our representation.
+
+ ## 3 Clustering and Annotation.ipynb
+
+ ### Dimensionality reduction of the full dataset
+
+Until now, the analysis has been performed at each stage independently. Now we are interested in making a full integration of the data to see the transcriptomic trajectories along time.
+
+For that, we perform a dimensionality reduction using the following pipeline:
+
+ 1. Selection of Highly Varying Genes using `seurat` flavor with the selection being the combination of the HVGs of each stage. We remove genes related with sex and cell cycle from this list.
+ 2. PCA, in the flavor of Truncated SD Decomposition.
+ 
+Notice that for this embedding we do not make any kind of batch correction as it is not clear what should be the correction between stages and it does not make much sense to make a correction between samples of each batch while mantaining the rest fixed.
+ 
+This returns us a latent space of the hole dataset.
+
+### Paga by stages and samples
+We expect that the connections between cells are more strongly connected in a causal order, being stages at close points having cells more connected than others.
+
+We can test this making a PAGA graph. For that we perform the following process:
+
+ 1. Make a KNN neighbour graph over the reduced space mentioned above.
+ 2. Make PAGA graph by Stages and by Samples.
+
+
+We can see that the stages are connected in a time order with a few exceptions:
+
+ 1. Mixed gastrulation is considered an outlier. This makes sense as it is a combination of cell types. We can conclude that this subset of the data is not informative for the analysis that we are performing.
+ 2. Stages E6.5 to E7.25 are very connected between them. There can be two reasons behind this exploration. the first is that transcriptomically the development between these stages is slower, making them very close to each other. The second reason is that the different embryos composing the different samples of each embryo are not annotated in the correcponding stage with high precission, giving rise to Stage annotation missalignements that lead to the high clustering. This second reason seems to be backed when the PAGA analysis is performed over the sample graph.
+ 3. A similar thing happen between stages E7.75 to E8.25.
+
+ We finally, we in a UMAP the integrated dataset. The complexity and density of the data does not allow to see much.
+
+ ### Transcriptomical connection between stages
+
+We connect the clusters between stages in fashion very similar to that proposed in [this paper](https://www.nature.com/articles/s41588-022-01018-x).
+
+The connections are made in to manners:
+
+ 1. Forward: Gives information of the clusters in a earlier stage to which future clusters provide in the future.
+ 2. Backward: Gives information of where the clusters in a later stage comes from.
