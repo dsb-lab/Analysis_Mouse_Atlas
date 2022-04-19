@@ -596,3 +596,14 @@ def make_empty_annotation(adata,old_annotations=None,groupby="Louvain_Stage",bat
         writer.save()
     
     return
+
+def save_representations(adata,folder="Matrices"):
+    """
+        Function to save all the representations of the data as matrix files to be loaded from other platforms (for example R).
+    """
+
+    adata.obs.to_csv(folder+"/Obs.csv",index=False)
+    adata.var.to_csv(folder+"/Var.csv",index=False)
+    for i in adata.obsm.keys():
+        np.savez(folder+"/"+i+".npz",adata.obsm[i])
+    np.savez(folder+"/X.npz",adata.X)
