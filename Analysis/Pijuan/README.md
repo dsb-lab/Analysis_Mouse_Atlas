@@ -1,4 +1,4 @@
-# Analysis of Pijuan-Sala dataset (v0.1)
+# Analysis of Pijuan-Sala dataset (v0.2)
 
 This dataset comes from the paper of [Pijuan-Sala et al. (2019)](https://www.nature.com/articles/s41586-019-0933-9).
 
