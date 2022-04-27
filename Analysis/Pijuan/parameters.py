@@ -1,47 +1,33 @@
 #All the human chosen parameters of the analysis
 
 # QC measures 
-#!!! None of this parameters are really chosen in our analysis and are just sloppy bounds of the QC in Pijuan
+#!!! Some of these parameters are really chosen in our analysis and are just sloppy bounds of the QC in Pijuan
 MIN_COUNTS = 5000
 MAX_COUNTS = 10E8
 MIN_GENES = 0
 MAX_GENES = 10E8
 MIN_CELLS = 1
 MAX_CELLS = 10E8
-MIN_MT_FRACTION = 0.0022
+MIN_MT_FRACTION = 0.0025 #Stripped cells
 MAX_MT_FRACTION = 1
+DOUBLET_SCORE_MAX_THRESHOLD = 0.2 # QC Doublets
+MAX_CLUSTER_IMPUTED_PROPORTION = .4
 
-# QC Doublets and Stripped cells
-DOUBLET_LOUVAIN_RESOLUTION = 10  
-##Doublets
-MAX_N_COUNTS = 39000
-DOUBLET_SCORE_MAX_THRESHOLD = 0.2
-
-#General parameters
+# DIMENSIONALITY REDUCTION
 ## HVGs
 HVG_METHOD = "seurat"
+N_FEATURES = 100000
 N_HVG = None
 ## PCs
 USE_HVGs = True
 N_PCS = 50
-## Neighbours
+
+# GRAPH EMBEDDING
+## Parameters for Neighbors
 METRIC = "correlation"
 N_NEIGBOURS = 25
-## Louvain
-LOUVAIN_INITIALISATION = 2 #Used for initialising the UMAPS
 
-#SAMPLE PARAMETERS
-##HVGs
-RECOMPUTE_HVGS = False
-##PCs
-RECOMPUTE_PCS = True
-##Cluster threshold
-CLUSTER_THRESHOLD = 0.25
-##Remove outliers
-DISCONNECTION_DISTANCE = 7
-MIN_CLUSTER_SIZE = 15
-
-#EXCLUDE FROM HVGs GENES
+# EXCLUDE FROM HVGs GENES
 SKIP_GENES_SEX = ["Xist"]
 SKIP_GENES_S_PHASE = \
     ['Mcm5', 'Pcna', 'Tyms', 'Fen1', 'Mcm2', 'Mcm4', 'Rrm1', 'Ung', 'Gins2',
@@ -59,10 +45,22 @@ SKIP_GENES_G2M = \
      'Cenpe', 'Ctcf', 'Nek2', 'G2e3', 'Gas2l3', 'Cbx5', 'Cenpa']
 SKIP_GENES = SKIP_GENES_SEX + SKIP_GENES_S_PHASE + SKIP_GENES_G2M
 
-#ANNOTATION
-#Louvain resolution
-LOUVAIN_RESOLUTION = 1
-DPC_CUT_PARAMETERS = [20,0.2]
+# CLUSTERING
+# Louvain resolution
+LOUVAIN_RESOLUTIONS = {
+    "E6.5":.3,
+    "E6.75":1,
+    "E7.0":.7,
+    "E7.25":.7,
+    "E7.5":1,
+    "E7.75":1,
+    "E8.0":1,
+    "E8.25":1,
+    "E8.5":1,
+    "mixed_gastrulation":1
+}
+
+# ANNOTATION
 #Genes used for manual annotation
 geneList = [
  'Adh1a2',
@@ -85,9 +83,3 @@ geneList = [
  'Uncx',
  'Wnt1','Wnt3','Wnt3a'
 ]
-
-#COMPARATIVE GENES
-genes_comparative = ["Osr1","Tbx6","Foxf1"]
-stages_comparative = {"E7.5":["3","4","7","10","11"],
-                      "E8.0":["4","5","6"],
-                      "E8.5":["1","2"]}
